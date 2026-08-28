@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["k8s.io/**"],
+      "groupName": "k8s.io go modules",
+      "description": "Must be bumped together, replace directives require matching versions"
+    },
+    {
+      "matchManagers": ["dockerfile", "gomod"],
+      "matchPackageNames": ["golang", "go"],
+      "groupName": "golang toolchain",
+      "description": "Keep the go.mod `go` directive and the Dockerfile golang base image in sync"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+# Example KubeSchedulerConfiguration wiring a weighted bin-packing pipeline:
+#
+#   1. InterPodAffinity  - respects pod (anti-)affinity constraints
+#   2. NodeResourcesFit   - MostAllocated: prefer already-loaded nodes
+#   3. NodeUptime         - Old: prefer long-running nodes over freshly
+#                            scaled-up ones, so idle nodes can scale down
+#
+# kube-scheduler combines all enabled Score plugins as a weighted sum
+# (score * weight), not a strict priority order - there is no first-match
+# short-circuit. Tune relative influence via `weight`.
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+leaderElection:
+  leaderElect: false
+profiles:
+  - schedulerName: bin-packing-scheduler
+    plugins:
+      score:
+        enabled:
+          - name: InterPodAffinity
+            weight: 100
+          - name: NodeResourcesFit
+            weight: 50
+          - name: NodeUptime
+            weight: 10
+        disabled:
+          - name: NodeResourcesBalancedAllocation
+    pluginConfig:
+      - name: NodeResourcesFit
+        args:
+          scoringStrategy:
+            type: MostAllocated
+      - name: NodeUptime
+        args:
+          mode: Old

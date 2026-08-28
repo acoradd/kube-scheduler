@@ -1,6 +1,6 @@
 module acoradd/kube-scheduler
 
-go 1.27
+go 1.22.0
 
 require (
 	k8s.io/api v0.30.3

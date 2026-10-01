@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"k8s.io/kubernetes/pkg/scheduler/framework"
+	"k8s.io/kube-scheduler/framework"
 )
 
 func TestNormalizeScoreOldFavorsOlderNodes(t *testing.T) {

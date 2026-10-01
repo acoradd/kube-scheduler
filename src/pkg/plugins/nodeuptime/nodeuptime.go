@@ -9,7 +9,7 @@ import (
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/kubernetes/pkg/scheduler/framework"
+	"k8s.io/kube-scheduler/framework"
 	frameworkruntime "k8s.io/kubernetes/pkg/scheduler/framework/runtime"
 )
 
@@ -45,12 +45,12 @@ func New(_ context.Context, obj runtime.Object, h framework.Handle) (framework.P
 
 // Score returns the node's creation time as a unix timestamp; normalized
 // in NormalizeScore relative to the other candidate nodes.
-func (pl *NodeUptime) Score(_ context.Context, _ *framework.CycleState, _ *v1.Pod, nodeName string) (int64, *framework.Status) {
-	nodeInfo, err := pl.handle.SnapshotSharedLister().NodeInfos().Get(nodeName)
-	if err != nil {
-		return 0, framework.AsStatus(fmt.Errorf("getting node %q from snapshot: %w", nodeName, err))
+func (pl *NodeUptime) Score(_ context.Context, _ framework.CycleState, _ *v1.Pod, nodeInfo framework.NodeInfo) (int64, *framework.Status) {
+	node := nodeInfo.Node()
+	if node == nil {
+		return 0, framework.AsStatus(fmt.Errorf("node not found in snapshot"))
 	}
-	return nodeInfo.Node().CreationTimestamp.Unix(), nil
+	return node.CreationTimestamp.Unix(), nil
 }
 
 func (pl *NodeUptime) ScoreExtensions() framework.ScoreExtensions { return pl }
@@ -58,7 +58,7 @@ func (pl *NodeUptime) ScoreExtensions() framework.ScoreExtensions { return pl }
 // NormalizeScore rescales raw unix timestamps to the [0, MaxNodeScore] range
 // expected by the framework, inverting the ordering when mode is ModeOld
 // since a smaller timestamp means an older node.
-func (pl *NodeUptime) NormalizeScore(_ context.Context, _ *framework.CycleState, _ *v1.Pod, scores framework.NodeScoreList) *framework.Status {
+func (pl *NodeUptime) NormalizeScore(_ context.Context, _ framework.CycleState, _ *v1.Pod, scores framework.NodeScoreList) *framework.Status {
 	if len(scores) == 0 {
 		return nil
 	}

@@ -1,9 +1,14 @@
 name: ci
 
 on:
-  push:
-    branches: [main]
   pull_request:
+  # Called by the release workflow so main is tested before publishing.
+  workflow_call:
+    inputs:
+      docker-build:
+        description: Run the non-pushing Docker build check
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -56,6 +61,8 @@ jobs:
           working-directory: src
 
   docker-build:
+    # Skipped when the caller builds the images itself (release).
+    if: inputs.docker-build != false
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

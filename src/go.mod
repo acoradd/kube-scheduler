@@ -6,7 +6,7 @@ require (
 	k8s.io/api v0.37.1
 	k8s.io/apimachinery v0.37.1
 	k8s.io/component-base v0.37.1
-	k8s.io/kube-scheduler v0.0.0
+	k8s.io/kube-scheduler v0.37.1
 	k8s.io/kubernetes v1.37.1
 )
 

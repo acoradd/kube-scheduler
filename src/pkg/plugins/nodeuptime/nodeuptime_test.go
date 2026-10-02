@@ -23,7 +23,7 @@ func TestNormalizeScoreOldFavorsOlderNodes(t *testing.T) {
 	if old <= young {
 		t.Fatalf("expected old-node to score higher than young-node, got old=%d young=%d", old, young)
 	}
-	if old != framework.MaxScore {
+	if old != MaxScore {
 		t.Fatalf("expected old-node to reach MaxNodeScore, got %d", old)
 	}
 	if young != 0 {
@@ -61,7 +61,7 @@ func TestNormalizeScoreAllNodesEqualAge(t *testing.T) {
 	}
 
 	for _, s := range scores {
-		if s.Score != framework.MaxScore {
+		if s.Score != MaxScore {
 			t.Fatalf("expected %s to score MaxNodeScore when all nodes tie, got %d", s.Name, s.Score)
 		}
 	}

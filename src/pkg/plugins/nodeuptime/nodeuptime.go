@@ -16,6 +16,11 @@ import (
 // Name is the name registered in the scheduler configuration's plugin lists.
 const Name = "NodeUptime"
 
+// MaxScore is the upper bound of normalized scores expected by the
+// framework. Declared locally because the upstream constant was renamed
+// (MaxNodeScore -> MaxScore) between the Kubernetes minors we build against.
+const MaxScore int64 = 100
+
 // NodeUptime scores nodes by creation timestamp.
 type NodeUptime struct {
 	handle framework.Handle
@@ -76,13 +81,13 @@ func (pl *NodeUptime) NormalizeScore(_ context.Context, _ framework.CycleState, 
 	span := max - min
 	for i, s := range scores {
 		if span == 0 {
-			scores[i].Score = framework.MaxScore
+			scores[i].Score = MaxScore
 			continue
 		}
 		if pl.mode == ModeOld {
-			scores[i].Score = framework.MaxScore * (max - s.Score) / span
+			scores[i].Score = MaxScore * (max - s.Score) / span
 		} else {
-			scores[i].Score = framework.MaxScore * (s.Score - min) / span
+			scores[i].Score = MaxScore * (s.Score - min) / span
 		}
 	}
 	return nil

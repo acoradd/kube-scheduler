@@ -49,8 +49,23 @@ docker buildx build --platform linux/amd64,linux/arm64 -t kube-scheduler:dev .
 ```
 
 CI builds and tests on every push/PR (including a non-pushing multi-arch
-Docker build check). Tagging a `vX.Y.Z` release publishes a multi-arch
-(`linux/amd64`, `linux/arm64`) image to `ghcr.io/acoradd/kube-scheduler`.
+Docker build check) against each supported Kubernetes minor, see the `k8s`
+matrix in `.github/workflows/`. `hack/set-k8s-version.sh <version>` (or
+`make k8s-version K8S_VERSION=<version>`) retargets `src/go.mod` locally.
+
+## Versioning and releases
+
+Versions are `v<k8s minor>.<release>.<k8s patch>`: `v35.2.9` is release 2 of
+this project built against Kubernetes 1.35.9, to be run on 1.35 clusters.
+
+- `<release>` comes from the `VERSION` file: bump it for every change to ship,
+  feature or bug fix.
+- `<k8s patch>` follows the Kubernetes libraries, bumped by Renovate.
+
+Every push to `main` publishes the versions not released yet as multi-arch
+(`linux/amd64`, `linux/arm64`) images to `ghcr.io/acoradd/kube-scheduler`,
+along with a git tag and a GitHub release. Each image is tagged `35.2.9`,
+`35.2` and `35` (latest release for Kubernetes 1.35).
 
 ## NodeUptime plugin args
 

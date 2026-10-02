@@ -2,12 +2,37 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "postUpdateOptions": ["gomodTidy"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Kubernetes releases of the CI/release build matrix",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\"\\s*# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)"
+      ],
+      "extractVersionTemplate": "^v(?<version>.+)$",
+      "versioningTemplate": "semver"
+    }
+  ],
   "packageRules": [
     {
-      "matchManagers": ["gomod"],
+      "matchManagers": ["gomod", "custom.regex"],
       "matchPackageNames": ["k8s.io/**"],
       "groupName": "k8s.io go modules",
       "description": "Must be bumped together, replace directives require matching versions"
+    },
+    {
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["k8s.io/**", "!k8s.io/klog/**", "!k8s.io/utils", "!k8s.io/kube-openapi"],
+      "separateMinorPatch": true,
+      "description": "Each matrix entry tracks patches of its own Kubernetes minor"
+    },
+    {
+      "matchManagers": ["gomod", "custom.regex"],
+      "matchPackageNames": ["k8s.io/**", "!k8s.io/klog/**", "!k8s.io/utils", "!k8s.io/kube-openapi"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false,
+      "description": "Supporting a new Kubernetes minor is done by hand: update the build matrix and src/go.mod together"
     },
     {
       "matchManagers": ["gomod"],

@@ -1,12 +1,27 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "postUpdateOptions": ["gomodTidy"],
   "packageRules": [
     {
       "matchManagers": ["gomod"],
       "matchPackageNames": ["k8s.io/**"],
       "groupName": "k8s.io go modules",
       "description": "Must be bumped together, replace directives require matching versions"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["k8s.io/**"],
+      "matchDepTypes": ["require", "indirect"],
+      "matchCurrentVersion": "/^v0\\.0\\.0$/",
+      "enabled": false,
+      "description": "Placeholder versions inherited from k8s.io/kubernetes staging modules; the effective version comes from the replace directive"
+    },
+    {
+      "matchManagers": ["gomod"],
+      "matchPackageNames": ["k8s.io/legacy-cloud-providers"],
+      "enabled": false,
+      "description": "Archived upstream, no release matches newer k8s versions"
     },
     {
       "matchManagers": ["dockerfile", "gomod"],

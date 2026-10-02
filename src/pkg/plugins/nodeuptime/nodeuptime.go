@@ -55,7 +55,7 @@ func (pl *NodeUptime) Score(_ context.Context, _ framework.CycleState, _ *v1.Pod
 
 func (pl *NodeUptime) ScoreExtensions() framework.ScoreExtensions { return pl }
 
-// NormalizeScore rescales raw unix timestamps to the [0, MaxNodeScore] range
+// NormalizeScore rescales raw unix timestamps to the [0, MaxScore] range
 // expected by the framework, inverting the ordering when mode is ModeOld
 // since a smaller timestamp means an older node.
 func (pl *NodeUptime) NormalizeScore(_ context.Context, _ framework.CycleState, _ *v1.Pod, scores framework.NodeScoreList) *framework.Status {
@@ -76,13 +76,13 @@ func (pl *NodeUptime) NormalizeScore(_ context.Context, _ framework.CycleState, 
 	span := max - min
 	for i, s := range scores {
 		if span == 0 {
-			scores[i].Score = framework.MaxNodeScore
+			scores[i].Score = framework.MaxScore
 			continue
 		}
 		if pl.mode == ModeOld {
-			scores[i].Score = framework.MaxNodeScore * (max - s.Score) / span
+			scores[i].Score = framework.MaxScore * (max - s.Score) / span
 		} else {
-			scores[i].Score = framework.MaxNodeScore * (s.Score - min) / span
+			scores[i].Score = framework.MaxScore * (s.Score - min) / span
 		}
 	}
 	return nil

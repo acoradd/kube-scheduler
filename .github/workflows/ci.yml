@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         k8s:
-          - "1.35.9" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.36.5" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.37.1" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.35.10" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.36.6" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.37.2" # renovate: datasource=go depName=k8s.io/kubernetes
     name: test (k8s ${{ matrix.k8s }})
     steps:
       - uses: actions/checkout@v7
@@ -44,9 +44,9 @@ jobs:
       fail-fast: false
       matrix:
         k8s:
-          - "1.35.9" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.36.5" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.37.1" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.35.10" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.36.6" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.37.2" # renovate: datasource=go depName=k8s.io/kubernetes
     name: lint (k8s ${{ matrix.k8s }})
     steps:
       - uses: actions/checkout@v7
@@ -68,9 +68,9 @@ jobs:
       fail-fast: false
       matrix:
         k8s:
-          - "1.35.9" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.36.5" # renovate: datasource=go depName=k8s.io/kubernetes
-          - "1.37.1" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.35.10" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.36.6" # renovate: datasource=go depName=k8s.io/kubernetes
+          - "1.37.2" # renovate: datasource=go depName=k8s.io/kubernetes
     name: docker-build (k8s ${{ matrix.k8s }})
     steps:
       - uses: actions/checkout@v7
